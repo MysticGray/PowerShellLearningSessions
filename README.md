@@ -1,6 +1,6 @@
 # Powershell Lesson 1 
 
-Learn the basics of objects, and their use case (scalar and collections)
+Learn the basics of objects and their use case (scalar and collections)
 -	Int
 -	String
 -	Here Strings
