@@ -1,4 +1,5 @@
-# Intro - PowerShell is an object-oriented scripting language written in the most part in C#. Orignailly called monad, it was developed by Jeffrey Snover (Chief Architect for PowerShell) in early 2003. Snover was also chief architect for MMC, but lets not hold that agains him :).
+# Intro - PowerShell is an object-oriented scripting language written in the most part in C#. Orignailly called monad, it was developed by Jeffrey Snover (Chief Architect for PowerShell) in early 2003. 
+# Snover was also chief architect for MMC, but lets not hold that against him :).
 # Powershell (5.1)- Windows only - Build on the .Net Framework
 # Powershell Core (6)- Multiplatform - built on .Net Core
 
@@ -154,7 +155,9 @@ if($thisIsAHashTable.Keys.Where({$_ -EQ "VDA-3"})){
 }
 
 # Since PowerShell is written around .Net, we have access to .Net type accelerators. 
+# Type accelerators in Powershell are alias of .net classes e.g. [bool]
 
+[psobject].Assembly.GetType("System.Management.Automation.TypeAccelerators")::get
 $time = [datetime]::Now
 #          ^          ^
 #         Type      Property
