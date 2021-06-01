@@ -178,7 +178,7 @@ $arrayList.Add("Item4")
 $null = $arrayList.Add("Item5")
 $arrayList.Add("Item6") | Out-Null
 
-# Filtering objects with Where, and Where-Object
+# Filtering objects with Where and Where-Object
 
 $events = Get-EventLog -LogName Application -Newest 100
 $events[0] | Get-Member -MemberType Property
