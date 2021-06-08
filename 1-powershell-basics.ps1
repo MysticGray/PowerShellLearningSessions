@@ -1,9 +1,9 @@
-# Intro - PowerShell is an object-oriented scripting language written in the most part in C#. Orignailly called monad, it was developed by Jeffrey Snover (Chief Architect for PowerShell) in early 2003. 
-# Snover was also chief architect for MMC, but lets not hold that against him :).
-# Powershell (5.1)- Windows only - Build on the .Net Framework
-# Powershell Core (6)- Multiplatform - built on .Net Core
+# Intro - PowerShell is an object-oriented scripting language written in the most part in C#. Originally called monad, it was developed by Jeffrey Snover (Chief Architect for PowerShell) in early 2003. 
+# Snover was also chief architect for MMC, but let's not hold that against him :).
+# PowerShell (5.1)- Windows only - Build on the .Net Framework
+# PowerShell Core (6)- Multiplatform - built on .Net Core
 
-# By convention, we name variables in camelCase. Functions and paramters are typically PascalCase.
+# By convention, we name variables in camelCase. Functions and parameters are typically PascalCase.
 
 
 ## Scalar Values i.e Single value
@@ -12,7 +12,7 @@
 $a = 1
 $b = 2
 
-# By default, PowerShell will return this to STDOUT, errors and exceptions are sent to STDERR ($error)
+# By default, PowerShell will return this output to the PowerShell host, sometimes called the Success stream. Exceptions are handled by the Error stream. The error stream is accessible through the reserved variable name $error. This is an ArrayList of ErrorRecord objects.
 
 $a + $b
 $a - $b
@@ -20,7 +20,7 @@ $a * $b
 $a / $b
 $a % $b
 
-## Strings
+# Strings
 
 $string = "String"
 $string
@@ -29,20 +29,20 @@ $string
 $string = '"This is a quoted string"' 
 $string
 
-## Strings can be added / concatenated together
+# Strings can be added / concatenated together
 $hello = "Hello"
 $world = "World"
 $helloWorld = $hello + $world
 $helloWorld
 
-## String Interpolation - Sometimes we need to output other objects to the screen. Typically, we can just add the var to the string output as below
+# String Interpolation - Sometimes we need to output other objects to the screen. Typically, we can just add the var to the string output as below
 $mostHandles = (Get-Process | Sort-Object Handles -Desc)[0]
-## This will not output correctly, since we are trying to acces the property of the object
+# This will not output correctly, since we are trying to acces the property of the object
 "Process with the most handles is $mostHandles.ProcessName"
-## We need to use string interpolation to ensure the output is correct
+# We need to use string interpolation to ensure the output is correct
 "Process with the most handles is $($mostHandles.ProcessName)"
 
-## Here Strings - This is a multi line string
+# Here Strings - This is a multi line string
 $hereString = @'
 This 
 string
@@ -59,7 +59,7 @@ $hereString
 $array = @("Item1","Item2","Item3")
 $array.GetType()
 
-## we can also declare on multiple lines, for readability - Note Commas are not required here
+# We can also declare on multiple lines, for readability - Note Commas are not required here
 
 $array = @(
     "Item1"
@@ -74,9 +74,9 @@ $array
 
 $array.add("Item4")
 
-# We must use the += operator. This is an an expensive operation, especially when adding hundreds or thousands of items are added to the array. 
+# We must use the += operator. This is an expensive operation, especially when adding hundreds or thousands of items are added to the array. 
 # The entire array must be re-written on each += operation, and the time take to complete the operation will increase exponentially to the number of objects in the array
-# We will discuss an alternative, more efficient, way to do this later. 
+# We will discuss an alternative, more efficient, way to do this later.
 
 $array += ("Item4")
 $array += (4)
@@ -90,7 +90,7 @@ $arrayRange
 $arrayRange[0]
 $arrayRange[20]
 
-## Looping through an array
+# Looping through an array
 # Call the ForEach Method
 $arrayRange.ForEach({
     Write-Host -ForegroundColor Red -Object $_
@@ -104,7 +104,7 @@ foreach ($number in $arrayRange){
     Write-Host -ForegroundColor Red -Object $number
 }
 
-## Hashtables can be quicker than arrays for searching larger data sets. They data in a hash map often refered to as key / value pair
+# Hashtables can be quicker than arrays for searching larger data sets. They data in a hash map often referred to as key / value pair
 
 $hashtable = @{
     "Forename" = "Scott"
@@ -117,7 +117,7 @@ $hashTable.Forename
 $hashtable.Add("Age", 27)
 $hashTable.Age
 
-## We can also use nested hashtables
+# We can also create and use nested hashtables
 
 $thisIsAHashTable = @{
     "VDA-1" = @{
@@ -136,7 +136,7 @@ $computer3Status =  @{
         "Registration" = "Unregistered"
     }
 
-## We can add a key value pair easily
+# We can add a key value pair easily
 $thisIsAHashTable.Add("VDA-3", $computer3Status)
 
 $thisIsAHashTable.'VDA-3'
@@ -146,7 +146,7 @@ $thisIsAHashTable.'VDA-3'.Status = "Online"
 $thisIsAHashTable.'VDA-3'.Registration = "Registered"
 $thisIsAHashTable.'VDA-3'
 
-## We can also remove the entry if is not needed 
+# We can also remove the entry if is not needed 
 if($thisIsAHashTable.Keys.Where({$_ -EQ "VDA-3"})){
     Write-Host "VDA-3 found - Removing" -ForegroundColor Red
     $thisIsAHashTable.Remove("VDA-3")
@@ -155,14 +155,16 @@ if($thisIsAHashTable.Keys.Where({$_ -EQ "VDA-3"})){
 }
 
 # Since PowerShell is written around .Net, we have access to .Net type accelerators. 
-# Type accelerators in Powershell are alias of .net classes e.g. [bool]
+# Type accelerators in PowerShell are alias of .net classes e.g. [bool]
 
 [psobject].Assembly.GetType("System.Management.Automation.TypeAccelerators")::get
 $time = [datetime]::Now
 #          ^          ^
 #         Type      Property
 $time
+
 # We can also call methods
+
 $daysInJune =  [datetime]::DaysInMonth(2021,6)
 #                  ^            ^        ^
 #                Type         Method    Args
@@ -181,7 +183,30 @@ $arrayList.Add("Item4")
 $null = $arrayList.Add("Item5")
 $arrayList.Add("Item6") | Out-Null
 
-# Filtering objects with Where and Where-Object
+# Another important structure is the PSCustomObject. This object is a quick way to create some form of structured data. We use the [PSCustomObject] type accelerator. 
+
+$customObject = [PSCustomObject]@{
+    "FirstName" = "Scott"
+    "FavouriteFood" = "Pizza"
+}
+$customObject
+
+# We can see our fields added as NoteProperties to the object
+$customObject | Get-Member
+
+$customObjectHashTable = @{
+    "FirstName" = "Scott"
+    "FavouriteFood" = "Pizza"
+}
+# We can see how the PSCustomObject differs from a hashtable. 
+
+$customObjectHashTable  | Get-Member
+
+# We can also convert a hashtable to a PSObject
+$convertedToPsObject = [PSCustomObject]$customObjectHashTable
+$convertedToPsObject
+
+# Filtering objects with Where method and Where-Object
 
 $events = Get-EventLog -LogName Application -Newest 100
 $events[0] | Get-Member -MemberType Property
